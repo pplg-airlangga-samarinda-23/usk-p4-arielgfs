@@ -22,7 +22,7 @@ include 'includes/header.php';
 <ul>
     <li><a href="buku/buku.php">Kelola Buku</a></li>
     <li><a href="anggota/anggota.php">Kelola Anggota</a></li>
-    <li><a href="transaksi.php">Transaksi</a></li>
+    <li><a href="transaksi/transaksi.php">Transaksi</a></li>
 </ul>
 
 <?php include 'includes/footer.php'; ?>
