@@ -1,34 +1,25 @@
-<?php
-include '../config/database.php';
-$id = $_GET['id'];
-
-$buku = mysqli_fetch_assoc(
-    mysqli_query($conn, "SELECT * FROM buku WHERE id=$id")
-);
-?>
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Buku</title>
+    <title>Register Siswa</title>
 
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(120deg, #0f4c81, #1976d2);
-            margin: 0;
+            background: linear-gradient(120deg, #1976d2, #42a5f5);
             min-height: 100vh;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
         .card {
-            background: #fff;
             width: 100%;
             max-width: 420px;
+            background: #fff;
             padding: 30px 28px;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.15);
@@ -37,11 +28,11 @@ $buku = mysqli_fetch_assoc(
         h2 {
             text-align: center;
             margin-bottom: 25px;
-            color: #0f4c81;
+            color: #1976d2;
         }
 
         .input-group {
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         label {
@@ -65,10 +56,16 @@ $buku = mysqli_fetch_assoc(
             box-shadow: 0 0 0 2px rgba(25,118,210,0.15);
         }
 
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 18px 0;
+        }
+
         button {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(90deg, #ffa000, #f57c00);
+            background: linear-gradient(90deg, #1976d2, #0f4c81);
             border: none;
             border-radius: 10px;
             font-size: 16px;
@@ -83,16 +80,19 @@ $buku = mysqli_fetch_assoc(
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
 
-        .back {
-            display: block;
+        .footer-text {
             text-align: center;
             margin-top: 15px;
-            color: #1976d2;
-            text-decoration: none;
-            font-weight: 600;
+            font-size: 14px;
         }
 
-        .back:hover {
+        .footer-text a {
+            color: #1976d2;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
             text-decoration: underline;
         }
     </style>
@@ -100,30 +100,47 @@ $buku = mysqli_fetch_assoc(
 <body>
 
 <div class="card">
-    <h2>✏️ Edit Data Buku</h2>
+    <h2>🧑‍🎓 Register Siswa</h2>
 
-    <form action="update.php" method="post">
-        <input type="hidden" name="id" value="<?= $buku['id'] ?>">
-
+    <form action="proses_register.php" method="post">
         <div class="input-group">
-            <label>Judul Buku</label>
-            <input type="text" name="judul" value="<?= htmlspecialchars($buku['judul']) ?>" required>
+            <label>Nama Lengkap</label>
+            <input type="text" name="nama" placeholder="Masukkan nama lengkap" required>
         </div>
 
         <div class="input-group">
-            <label>Penulis</label>
-            <input type="text" name="penulis" value="<?= htmlspecialchars($buku['penulis']) ?>" required>
+            <label>Kelas</label>
+            <input type="text" name="kelas" placeholder="Contoh: XII RPL 1">
         </div>
 
         <div class="input-group">
-            <label>Stok</label>
-            <input type="number" name="stok" value="<?= $buku['stok'] ?>" min="0" required>
+            <label>Alamat</label>
+            <input type="text" name="alamat" placeholder="Alamat lengkap">
         </div>
 
-        <button type="submit">Update Buku</button>
+        <div class="input-group">
+            <label>No HP</label>
+            <input type="text" name="no_hp" placeholder="08xxxxxxxxxx">
+        </div>
+
+        <hr>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username login" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password login" required>
+        </div>
+
+        <button type="submit">Daftar</button>
     </form>
 
-    <a href="buku.php" class="back">← Kembali ke Data Buku</a>
+    <div class="footer-text">
+        Sudah punya akun? <a href="index.php">Login</a>
+    </div>
 </div>
 
 </body>

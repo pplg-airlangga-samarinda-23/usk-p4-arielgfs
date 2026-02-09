@@ -2,121 +2,120 @@
 session_start();
 include '../config/database.php';
 
-if (!isset($_SESSION['login']) || $_SESSION['role'] !== 'siswa') {
-    header("Location: ../index.php");
-    exit;
+if ($_SESSION['role'] !== 'siswa') {
+    die("Akses ditolak");
 }
 
-$buku = mysqli_query($conn,"SELECT * FROM buku WHERE stok > 0");
+$buku = mysqli_query($conn, "SELECT * FROM buku WHERE stok > 0");
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>Pinjam Buku</title>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f7f5f2;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinjam Buku</title>
 
-h2 {
-    margin-bottom: 10px;
-}
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(120deg, #1976d2, #42a5f5);
+            margin: 0;
+            min-height: 100vh;
+        }
 
-.search-box {
-    margin-bottom: 20px;
-}
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
 
-.search-box input {
-    width: 100%;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #1976d2;
+        }
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 16px;
-}
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
 
-.card {
-    background: white;
-    padding: 15px;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,.05);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
+        .card {
+            background: #f4f8ff;
+            border-radius: 14px;
+            padding: 20px 18px;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
 
-.card h4 {
-    margin: 0 0 8px;
-}
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
 
-.stok {
-    font-size: 13px;
-    margin-bottom: 10px;
-}
+        .card h4 {
+            margin: 0 0 8px;
+            color: #0f4c81;
+        }
 
-.stok.banyak { color: green; }
-.stok.sedikit { color: orange; }
+        .card p {
+            margin: 0 0 15px;
+            color: #555;
+        }
 
-.card form button {
-    background: #3cb371;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 8px;
-    cursor: pointer;
-}
+        .card form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #1976d2, #0f4c81);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
 
-.card form button:hover {
-    opacity: .9;
-}
-</style>
+        .card form button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<h2>📚 Pinjam Buku</h2>
+<div class="container">
+    <h2>📚 Pinjam Buku</h2>
 
-<div class="search-box">
-    <input type="text" id="search" placeholder="Cari judul buku...">
-</div>
+    <div class="grid">
+        <?php while ($b = mysqli_fetch_assoc($buku)) : ?>
+            <div class="card">
+                <div>
+                    <h4><?= htmlspecialchars($b['judul']) ?></h4>
+                    <p>Stok: <?= $b['stok'] ?></p>
+                </div>
 
-<div class="grid" id="bukuGrid">
-
-<?php while($b = mysqli_fetch_assoc($buku)): ?>
-<div class="card" data-judul="<?= strtolower($b['judul']) ?>">
-    <h4><?= $b['judul'] ?></h4>
-
-    <div class="stok <?= $b['stok'] <= 2 ? 'sedikit' : 'banyak' ?>">
-        Stok: <?= $b['stok'] ?>
+                <form action="proses_pinjam.php" method="post">
+                    <input type="hidden" name="buku_id" value="<?= $b['id'] ?>">
+                    <button type="submit">Pinjam</button>
+                </form>
+            </div>
+        <?php endwhile; ?>
     </div>
-
-    <form action="proses_pinjam.php" method="post">
-        <input type="hidden" name="buku_id" value="<?= $b['id'] ?>">
-        <button type="submit">Pinjam</button>
-    </form>
 </div>
-<?php endwhile; ?>
-
-</div>
-
-<script>
-const search = document.getElementById('search');
-const cards = document.querySelectorAll('.card');
-
-search.addEventListener('keyup', function () {
-    const keyword = this.value.toLowerCase();
-    cards.forEach(card => {
-        const judul = card.dataset.judul;
-        card.style.display = judul.includes(keyword) ? 'flex' : 'none';
-    });
-});
-</script>
 
 </body>
 </html>

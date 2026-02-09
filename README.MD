@@ -22,3 +22,4 @@ Saya membuat aplikasi perpustakaan online, yang dimana pengguna dapat meminjam b
 - XAMPP.
 - MySql.
 - CSS.
+- VS Code sebagai text editor.
